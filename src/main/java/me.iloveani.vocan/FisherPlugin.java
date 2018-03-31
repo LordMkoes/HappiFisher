@@ -35,7 +35,7 @@ public final class FisherPlugin extends JavaPlugin implements Listener {
 
     @EventHandler
     private void playerConsumeEvent(PlayerItemConsumeEvent playerItemConsumeEvent) {
-            if (eatUtil.eatableItemsWithoutFish.contains(playerItemConsumeEvent.getItem())) {
+            if (!(eatUtil.fishsItemstacks.contains(playerItemConsumeEvent.getItem()))) {
                 playerItemConsumeEvent.setCancelled(true);
                 playerItemConsumeEvent.getPlayer().sendMessage("Niestety, ale na tym serwerze mozna jesc tylko ryby tak jak stary happiego!");
             if (playerItemConsumeEvent.getItem().getType() == Material.GOLDEN_APPLE) {
@@ -50,8 +50,8 @@ public final class FisherPlugin extends JavaPlugin implements Listener {
     private void openChestInVillage(InventoryOpenEvent inventoryOpenEvent) {
 
         for (ItemStack itemstack : inventoryOpenEvent.getInventory().getContents()) {
-            if (eatUtil.eatableItemsWithoutFish.contains(itemstack)) {
-                itemstack.setAmount(-1);
+            if (!(eatUtil.fishsItemstacks.contains(itemstack))) {
+                inventoryOpenEvent.getInventory().remove(itemstack);
                 inventoryOpenEvent.getPlayer().sendMessage("Otworzyles inventory z jedzeniem ,tkorego nie mozna zdobyc! jego ilosc zostaje ustawiona na -1");
             }
         }
@@ -65,7 +65,7 @@ public final class FisherPlugin extends JavaPlugin implements Listener {
 
     @EventHandler
     private void onEntityDeath(EntityDeathEvent entityDeathEvent) {
-        if (!(entityDeathEvent.getEntity().getType() == EntityType.PLAYER)) {
+        if (entityDeathEvent.getEntity().getType() != EntityType.PLAYER) {
             entityDeathEvent.getDrops().clear();
         }
     }
